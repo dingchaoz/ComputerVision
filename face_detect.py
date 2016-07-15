@@ -16,6 +16,9 @@ image = cv2.imread(imagePath)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # Detect faces in the image
+# Things learnt with the parameters
+# scaleFactor, the smaller the face in the pic(the further the camera was away), 
+# the higher the scale Factor should be; the opposite applies to minSize
 faces = faceCascade.detectMultiScale(
     gray,
     scaleFactor=1.07,
