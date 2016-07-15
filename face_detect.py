@@ -1,5 +1,6 @@
-# References
+# Reference
 # https://realpython.com/blog/python/face-recognition-with-python/
+
 import cv2
 import sys
 
@@ -17,9 +18,9 @@ gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 # Detect faces in the image
 faces = faceCascade.detectMultiScale(
     gray,
-    scaleFactor=1.1,
+    scaleFactor=1.07,
     minNeighbors=5,
-    minSize=(100, 100)
+    minSize=(130, 130)
     #flags = cv2.cv.CV_HAAR_SCALE_IMAGE
 )
 
