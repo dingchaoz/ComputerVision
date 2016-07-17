@@ -19,11 +19,20 @@ gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 # Things learnt with the parameters
 # scaleFactor, the smaller the face in the pic(the further the camera was away), 
 # the higher the scale Factor should be; the opposite applies to minSize
+# faces = faceCascade.detectMultiScale(
+#     gray,
+#     scaleFactor=1.07,
+#     minNeighbors=5,
+#     minSize=(130, 130)
+#     #flags = cv2.cv.CV_HAAR_SCALE_IMAGE
+# )
+
+
 faces = faceCascade.detectMultiScale(
     gray,
     scaleFactor=1.07,
     minNeighbors=5,
-    minSize=(130, 130)
+    minSize=(100, 100)
     #flags = cv2.cv.CV_HAAR_SCALE_IMAGE
 )
 
