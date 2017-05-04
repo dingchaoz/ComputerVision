@@ -2,11 +2,13 @@
 # https://realpython.com/blog/python/face-detection-in-python-using-a-webcam/
 import cv2
 import sys
+import datetime
 
 cascPath = sys.argv[1]
 faceCascade = cv2.CascadeClassifier(cascPath)
 
 video_capture = cv2.VideoCapture(0)
+margin = 150
 
 while True:
     # Capture frame-by-frame
@@ -24,10 +26,16 @@ while True:
 
     # Draw a rectangle around the faces
     for (x, y, w, h) in faces:
+        #http://stackoverflow.com/questions/31932588/opencv-face-recognition-get-coordinates-of-bounding-box-around-image
+        cropFace = frame[y-margin:y+h+margin,x-margin:x+w+margin]
+    	saveFName = 'roi'+str(datetime.datetime.now())+'.png'
+    	cv2.imwrite(saveFName,cropFace)
+
+
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         font = cv2.FONT_HERSHEY_SIMPLEX
-    	cv2.putText(frame,'Male,28',(x+w, y+h), font, 0.5,(0,255,0),1,cv2.LINE_AA)
-    	#out.write(frame)
+    	cv2.putText(frame,' Male,28',(x+w, y+h), font, 0.5,(0,255,0),1,cv2.LINE_AA)
+    	
 
     # Display the resulting frame
     cv2.imshow('Video', frame)
