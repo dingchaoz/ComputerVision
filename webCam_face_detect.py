@@ -9,6 +9,7 @@ faceCascade = cv2.CascadeClassifier(cascPath)
 
 video_capture = cv2.VideoCapture(0)
 margin = 150
+numSavedImgs = 0
 
 while True:
     # Capture frame-by-frame
@@ -27,9 +28,12 @@ while True:
     # Draw a rectangle around the faces
     for (x, y, w, h) in faces:
         #http://stackoverflow.com/questions/31932588/opencv-face-recognition-get-coordinates-of-bounding-box-around-image
-        cropFace = frame[y-margin:y+h+margin,x-margin:x+w+margin]
-    	saveFName = 'roi'+str(datetime.datetime.now())+'.png'
-    	cv2.imwrite(saveFName,cropFace)
+        
+        if numSavedImgs <= 10:
+	        cropFace = frame[y-margin:y+h+margin,x-margin:x+w+margin]
+	    	saveFName = 'roi'+str(datetime.datetime.now())+'.png'
+	    	cv2.imwrite(saveFName,cropFace)
+	    	numSavedImgs += 1
 
 
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
