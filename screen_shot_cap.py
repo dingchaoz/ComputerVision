@@ -10,7 +10,7 @@ import datetime
 # import keras
 # from keras.models import load_model
 from predict_gender import *
-
+import pyscreenshot
 
 os.chdir('/Users/ejlq/Documents/dingchao/ComputerVision')
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -53,10 +53,15 @@ def labelFaces(x,y,w,h):
 model = loadVGG()
 
 while(True):
-    screen = ImageGrab.grab(bbox=(0,0,1600,1600)) #bbox specifies specific region (bbox= x,y,width,height)
+    screen = ImageGrab.grab(bbox=(0,0,1500,1500)) #bbox specifies specific region (bbox= x,y,width,height)
+    #screen = pyscreenshot.grab(bbox=(0,0,1200,900))
     screen_np = np.array(screen)
     gray = cv2.cvtColor(screen_np, cv2.COLOR_BGR2GRAY)
-    img = gray
+
+    r,g,b,a = screen.split()
+    img= np.array(Image.merge("RGB", (r, g, b)))
+    #img = gray
+
     faces = detectFaces(gray)
 
     for (x,y,w,h) in faces:
@@ -71,7 +76,7 @@ while(True):
 			else:
 				os.remove(saveFName)
 
-    screenshot = cv2.resize(img, (0,0), fx=0.45, fy=0.8) 
+    screenshot = cv2.resize(img, (0,0), fx=0.5, fy=0.5) 
     cv2.imshow("screenshot", screenshot)
 
 
