@@ -3,6 +3,14 @@ import cv2
 import numpy as np
 import collections
 import itertools
+import datetime
+import time
+from predict_gender import *
+
+strings = time.strftime("%Y,%m,%d,%H,%M,%S")
+newpath = strings.replace(',','') + '/'
+os.makedirs(newpath)
+
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -69,6 +77,21 @@ def detect_face_change(face_num_his,current_face_num):
             return False
 
 
+def saveFaceImg(face_locations,face_name):
+    top, right, bottom, left = face_locations
+    top *= 4
+    right *= 4
+    bottom *= 4
+    left *= 4
+
+    margin = int(max(abs(top-bottom),abs(right-left))/2)
+    cropFace = frame[top-margin:bottom+margin,left-margin:right+margin]
+    saveFName = newpath+'roi'+str(face_name)+'.png'
+    cv2.imwrite(saveFName,cropFace)
+    print ('saved face img',face_name)
+    return cropFace,saveFName
+
+
 while True:
     # Grab a single frame of video
     ret, frame = video_capture.read()
@@ -91,7 +114,11 @@ while True:
             text += 'face num chagned, doing face match'
             print ('doing match face')
             face_names = []
-            for face_encoding in face_encodings:
+            for i in range(len(face_locations)):
+
+                face_encoding = face_encodings[i]
+                face_location = face_locations[i]
+
                 # See if the face is a match for the known face(s)
                 match = face_recognition.compare_faces(known_faces, face_encoding)
                 print (match)
@@ -105,6 +132,8 @@ while True:
                     print ('adding new face')
                     known_faces.append(face_encoding)
                     know_faces_names.append(name)
+
+                    saveFaceImg(face_location,name)
 
 
                 face_names.append(name)
