@@ -19,9 +19,9 @@ video_capture = cv2.VideoCapture(0)
 # Load a sample picture and learn how to recognize it.
 # obama_image = face_recognition.load_image_file("obama1.jpg")
 # obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
-dingchao_image = face_recognition.load_image_file("profile.jpg")
+dingchao_image = face_recognition.load_image_file("obama1.jpg")
 dingchao_face_encoding = face_recognition.face_encodings(dingchao_image)[0]
-candy_image = face_recognition.load_image_file("Candy.jpg")
+candy_image = face_recognition.load_image_file("biden1.jpg")
 candy_face_encoding = face_recognition.face_encodings(candy_image)[0]
 
 known_faces = [
@@ -76,6 +76,8 @@ while True:
     # Resize frame of video to 1/4 size for faster face recognition processing
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
+    text = ''
+
     # Only process every other frame of video to save time
     if process_this_frame:
         # Find all the faces and face encodings in the current frame of video
@@ -86,18 +88,23 @@ while True:
         face_changed = detect_face_change(face_num_his,len(face_locations))
 
         if face_changed:
+            text += 'face num chagned, doing face match'
             print ('doing match face')
             face_names = []
             for face_encoding in face_encodings:
                 # See if the face is a match for the known face(s)
                 match = face_recognition.compare_faces(known_faces, face_encoding)
+                print (match)
 
-
-                if np.where(match):
+                if len(np.where(match)[0]) > 0:
                     name = know_faces_names[np.where(match)[0][0]]
                 else:
                     unknown_face_num += 1
                     name = 'Face'+ str(unknown_face_num)
+                    text += 'adding new face'
+                    print ('adding new face')
+                    known_faces.append(face_encoding)
+                    know_faces_names.append(name)
 
 
                 face_names.append(name)
@@ -120,6 +127,7 @@ while True:
         cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
         cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        cv2.putText(frame, text, (100, 100), font, 1.0, (255, 0, 0), 1)
 
 
     # Display the resulting image
