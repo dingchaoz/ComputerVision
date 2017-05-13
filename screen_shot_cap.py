@@ -7,12 +7,10 @@ import sys
 import time
 import numpy as np
 import datetime
-# import keras
-# from keras.models import load_model
 from predict_gender import *
-import pyscreenshot
 
-os.chdir('/Users/ejlq/Documents/dingchao/ComputerVision')
+
+#os.chdir('/Users/ejlq/Documents/dingchao/ComputerVision')
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 numSavedImgs = 0
 modelPath = 'saved_model_20170504.h5'
@@ -57,9 +55,10 @@ while(True):
     #screen = pyscreenshot.grab(bbox=(0,0,1200,900))
     screen_np = np.array(screen)
     gray = cv2.cvtColor(screen_np, cv2.COLOR_BGR2GRAY)
-
-    r,g,b,a = screen.split()
-    img= np.array(Image.merge("RGB", (r, g, b)))
+    
+    img = cv2.cvtColor(screen_np, cv2.COLOR_RGBA2RGB)
+    # r,g,b,a = screen.split()
+    # img= np.array(Image.merge("RGB", (r, g, b)))
     #img = gray
 
     faces = detectFaces(gray)

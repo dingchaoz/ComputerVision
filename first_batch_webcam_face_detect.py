@@ -56,6 +56,8 @@ while True:
 	    	cv2.imwrite(saveFName,cropFace)
 	    	if os.stat(saveFName).st_size > 0:
 	    		numSavedImgs += 1
+	    	else:
+	    		os.remove(saveFName)
 
 	    	if (numSavedImgs == 10) and (modelRan == -1) :
 	    		np_array = loadBatch2Array(newpath)

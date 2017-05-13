@@ -1,4 +1,0 @@
-Dask, Holoviews, datashader, conda-forge
-jupyter has a js library
-tonyfast
-https://anaconda.org/tonyfast

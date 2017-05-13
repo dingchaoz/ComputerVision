@@ -1,2 +1,0 @@
-Followed this link to install Open CV, seems the post is for C use only, and it failed in application
-http://blogs.wcode.org/2014/10/howto-install-build-and-use-opencv-macosx-10-10/

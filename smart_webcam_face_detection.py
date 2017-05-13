@@ -8,13 +8,12 @@ import datetime
 from predict_gender import *
 
 
-os.chdir('/Users/ejlq/Documents/dingchao/ComputerVision')
+#os.chdir('/Users/ejlq/Documents/dingchao/ComputerVision')
 
 # Load the pre-trained face and eye classifier xml file, which are stored in opencv/data/haarcascades/folder
 video_capture = cv2.VideoCapture(0)
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 numSavedImgs = 0
-modelPath = 'saved_model_20170504.h5'
 strings = time.strftime("%Y,%m,%d,%H,%M,%S")
 newpath = strings.replace(',','') + '/'
 os.makedirs(newpath)
@@ -23,9 +22,9 @@ numFaces = 0
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
-def read2Gray(imgPath = 'trump_melania.jpg'):
+def read2Gray():
 	# Read image and make it in grayscale mode
-	img = cv2.imread(imgPath)
+	ret, img = video_capture.read()
 	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)	
 	return img,gray
 
@@ -62,19 +61,30 @@ model = loadVGG()
 
 while True:
     # Capture frame-by-frame
-    ret, img = video_capture.read()
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img,gray = read2Gray()
     faces = detectFaces(gray)
 
 
+    # for (x,y,w,h) in faces:
+    # 	numFaces += 1
+    # 	cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces)
+    # 	if os.stat(saveFName).st_size > 1e5:
+    # 		sex = estSex(saveFName)
+    # 		labelFaces(x,y,w,h)
+    # 	else:
+    # 		os.remove(saveFName)
+	
     for (x,y,w,h) in faces:
     	numFaces += 1
     	cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces)
-    	if os.stat(saveFName).st_size > 1e5:
-    		sex = estSex(saveFName)
-    		labelFaces(x,y,w,h)
+
+    	if (os.stat(saveFName).st_size) > 0:
+    		i_w,i_h = Image.open(saveFName).size
+    		if 1.2 >i_w/i_h > 0.8:
+    			sex = estSex(saveFName)
+    			labelFaces(x,y,w,h)
     	else:
-    		os.remove(saveFName)
+			os.remove(saveFName)
 
 	# show image with rectangular             
 	cv2.imshow('Video',img)
