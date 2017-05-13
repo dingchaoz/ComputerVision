@@ -43,6 +43,7 @@ know_faces_names = ['Dingchao','Candy']
 face_locations = []
 face_encodings = []
 face_names = []
+face_genders = ['male','male']
 face_landmarks = []
 process_this_frame = True
 unknown_face_num = 0
@@ -70,8 +71,8 @@ def detect_face_change(face_num_his,current_face_num):
     elif current_face_num != face_num_his[-1]:
         return False
     elif collections.deque(itertools.islice(face_num_his, 1, 4)) != collections.deque(itertools.islice(face_num_his, 0, 3)):
-        last4num = collections.deque(itertools.islice(face_num_his, 1, 4))
-        if collections.deque(itertools.islice(last4num, 1, 4)) != collections.deque(itertools.islice(last4num, 0, 3)):
+        last9num = collections.deque(itertools.islice(face_num_his, 1, 4))
+        if collections.deque(itertools.islice(last9num, 1, 4)) == collections.deque(itertools.islice(last9num, 0, 3)):
             print ("Face detected")
             return True
         else:
@@ -134,6 +135,7 @@ while True:
 
                 if len(np.where(match)[0]) > 0:
                     name = know_faces_names[np.where(match)[0][0]]
+                    gender = face_genders[np.where(match)[0][0]]
                 else:
                     unknown_face_num += 1
                     name = 'Face'+ str(unknown_face_num)
@@ -150,8 +152,9 @@ while True:
                             print ('estiamte gender')
                             gender = estSex(saveFName)
                             print (gender)
-                            name += gender
-                            print (name)
+                            face_genders.append(gender)
+
+
 
                         else:
                              os.remove(saveFName)
@@ -165,7 +168,7 @@ while True:
 
 
     # Display the results
-    for (top, right, bottom, left), name in zip(face_locations, face_names):
+    for (top, right, bottom, left), name,gender in zip(face_locations, face_names,face_genders):
         # Scale back up face locations since the frame we detected in was scaled to 1/4 size
         top *= 4
         right *= 4
@@ -178,7 +181,7 @@ while True:
         # Draw a label with a name below the face
         cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
-        cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        cv2.putText(frame, name+gender, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
         cv2.putText(frame, text, (100, 100), font, 1.0, (255, 0, 0), 1)
 
 
