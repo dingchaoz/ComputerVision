@@ -61,6 +61,7 @@ facial_features = [
     'bottom_lip'
 ]
 
+model = loadVGG()
 
 def detect_face_change(face_num_his,current_face_num):
     if len(face_num_his) < 5 and face_num_his[-1] > 0:
@@ -90,6 +91,14 @@ def saveFaceImg(face_locations,face_name):
     cv2.imwrite(saveFName,cropFace)
     print ('saved face img',face_name)
     return cropFace,saveFName
+
+
+def estSex(saveFName):
+	# resized_img = resize(cropFace)
+	# arr = im2Array(resized_img)
+	arr = np.array([loadImg2Array(saveFName)])
+	sex = predict_vgg(model,arr)
+	return sex
 
 
 while True:
@@ -133,7 +142,21 @@ while True:
                     known_faces.append(face_encoding)
                     know_faces_names.append(name)
 
-                    saveFaceImg(face_location,name)
+                    cropFace,saveFName = saveFaceImg(face_location,name)
+
+                    if (os.stat(saveFName).st_size) > 0:
+                        i_w,i_h = Image.open(saveFName).size
+                        if 2.2 >i_w/i_h > 0.4:
+                            print ('estiamte gender')
+                            gender = estSex(saveFName)
+                            print (gender)
+                            name += gender
+                            print (name)
+
+                        else:
+                             os.remove(saveFName)
+                             print ('removed face img',saveFName)
+                             unknown_face_num -= 1
 
 
                 face_names.append(name)
