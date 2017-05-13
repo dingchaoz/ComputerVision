@@ -13,7 +13,6 @@ from predict_gender import *
 #os.chdir('/Users/ejlq/Documents/dingchao/ComputerVision')
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 numSavedImgs = 0
-modelPath = 'saved_model_20170504.h5'
 strings = time.strftime("%Y,%m,%d,%H,%M,%S")
 newpath = strings.replace(',','') + '/'
 os.makedirs(newpath)

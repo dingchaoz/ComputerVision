@@ -3,12 +3,10 @@ import sys
 import time
 import numpy as np
 import datetime
-# import keras
-# from keras.models import load_model
+
 from predict_gender import *
 
 
-#os.chdir('/Users/ejlq/Documents/dingchao/ComputerVision')
 
 # Load the pre-trained face and eye classifier xml file, which are stored in opencv/data/haarcascades/folder
 video_capture = cv2.VideoCapture(0)

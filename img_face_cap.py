@@ -63,6 +63,28 @@ def main(argv):
 	faces = detectFaces(face_cascade,gray)
 
 
+
+    '''
+    Drawing facial landmark
+    Save 10 pics initially
+    Analyze facial measurements and give it a index number
+    Predict gender and assign a label
+
+
+    If face number changes up or down for more than 5 secs
+    Compare if detected faces are existing faces,
+    if yes:
+            just give the pre-estiamted label
+    if not:
+            draw facial landmark, save 10 pics,
+            analyze measurement, predict gender and assign a label
+
+
+    '''
+
+
+
+
 	for (x,y,w,h) in faces:
 		numFaces += 1
 		cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces,img,newpath)
