@@ -1,8 +1,7 @@
 import cv2
 import sys
 import time
-import numpy as np
-import datetime
+
 
 from predict_gender import *
 from PIL import Image
@@ -29,7 +28,7 @@ def detectFaces(face_cascade,gray,scaleFactor = 1.1,minNeighbors=5,minSize=(30,3
 
 
 def saveFaceImg(x,y,w,h,numFaces,img,newpath):
-	margin = max(w,h)/2
+	margin = int(max(w,h)/2)
 	cropFace = img[y-margin:y+h+margin,x-margin:x+w+margin]
 	saveFName = newpath+'roi'+str(numFaces)+'.png'
 	cv2.imwrite(saveFName,cropFace)
@@ -53,12 +52,9 @@ def main(argv):
 
 
 	face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-	numSavedImgs = 0
-	modelPath = 'saved_model_20170504.h5'
 	strings = time.strftime("%Y,%m,%d,%H,%M,%S")
 	newpath = strings.replace(',','') + '/'
 	os.makedirs(newpath)
-	modelRan = -1
 	numFaces = 0
 	font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -85,5 +81,5 @@ def main(argv):
 	cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+	main(sys.argv[1:])
 

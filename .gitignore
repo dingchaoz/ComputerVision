@@ -45,3 +45,5 @@ katie_brian/
 caffe2keras/
 dingchao_jeff/
 face_recognition-master/
+__pycache__/
+.idea/

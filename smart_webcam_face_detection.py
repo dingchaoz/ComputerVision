@@ -37,7 +37,7 @@ def detectFaces(gray,scaleFactor = 1.1,minNeighbors=5,minSize=(30,30)):
 
 
 def saveFaceImg(x,y,w,h,numFaces):
-	margin = max(w,h)/2
+	margin = int(max(w,h)/2)
 	cropFace = img[y-margin:y+h+margin,x-margin:x+w+margin]
 	saveFName = newpath+'roi'+str(numFaces)+'.png'
 	cv2.imwrite(saveFName,cropFace)
@@ -64,30 +64,20 @@ while True:
     img,gray = read2Gray()
     faces = detectFaces(gray)
 
-
-    # for (x,y,w,h) in faces:
-    # 	numFaces += 1
-    # 	cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces)
-    # 	if os.stat(saveFName).st_size > 1e5:
-    # 		sex = estSex(saveFName)
-    # 		labelFaces(x,y,w,h)
-    # 	else:
-    # 		os.remove(saveFName)
-	
     for (x,y,w,h) in faces:
-    	numFaces += 1
-    	cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces)
+        numFaces += 1
+        cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces)
 
-    	if (os.stat(saveFName).st_size) > 0:
-    		i_w,i_h = Image.open(saveFName).size
-    		if 1.2 >i_w/i_h > 0.8:
-    			sex = estSex(saveFName)
-    			labelFaces(x,y,w,h)
-    	else:
-			os.remove(saveFName)
+        if (os.stat(saveFName).st_size) > 0:
+            i_w,i_h = Image.open(saveFName).size
+            if 1.2 >i_w/i_h > 0.8:
+                sex = estSex(saveFName)
+                labelFaces(x,y,w,h)
+        else:
+            os.remove(saveFName)
 
 	# show image with rectangular             
-	cv2.imshow('Video',img)
+    cv2.imshow('Video',img)
 
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
