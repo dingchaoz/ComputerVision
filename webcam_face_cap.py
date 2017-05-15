@@ -1,11 +1,7 @@
-import cv2
-import sys
 import time
-import numpy as np
-import datetime
-
 from predict_gender import *
-
+import collections
+import numpy as np
 
 
 # Load the pre-trained face and eye classifier xml file, which are stored in opencv/data/haarcascades/folder
@@ -18,6 +14,11 @@ os.makedirs(newpath)
 modelRan = -1
 numFaces = 0
 font = cv2.FONT_HERSHEY_SIMPLEX
+process_this_frame = True
+last3window_avg = collections.deque(maxlen=3)
+cur_window=collections.deque(maxlen=5)
+facechange_res= collections.deque(maxlen=3)
+facenum_when_captured = 0
 
 
 def read2Gray():
@@ -54,27 +55,82 @@ def labelFaces(x,y,w,h):
 	imgLabel = sex
 	cv2.putText(img,imgLabel,(x, y), font, 1,(0,255,0),1,cv2.LINE_AA)
 
+def faceNumChange(cur_window,last3window_avg):
+
+	if np.mean(list(cur_window)) > np.mean(list(last3window_avg)):
+		res = 'face num increased'
+	elif np.mean(list(cur_window)) < np.mean(list(last3window_avg)):
+		res = 'face num decreased'
+	else:
+		res = 'face num not changed'
+
+	return res
+
+def captureNewFace(l,facenum,facnum_when_captured):
+	if len(list(l)) == 3:
+		if l[0] == l[1] == l[2] == 'face num not changed' and facnum_when_captured != facenum:
+			return True
+
+
 model = loadVGG()
 
 
 while True:
     # Capture frame-by-frame
     img,gray = read2Gray()
-    faces = detectFaces(gray)
 
-    for (x,y,w,h) in faces:
-        numFaces += 1
-        cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces)
+    if process_this_frame:
+        faces = detectFaces(gray)
+        facenum = len(faces)
+        cur_window.append(facenum)
 
-        if (os.stat(saveFName).st_size) > 0:
-            i_w,i_h = Image.open(saveFName).size
-            if 1.2 >i_w/i_h > 0.8:
-                sex = estSex(saveFName)
-                labelFaces(x,y,w,h)
-        else:
-            os.remove(saveFName)
+        last3window_avg.append(np.mean(list(cur_window)))
 
-	# show image with rectangular             
+        change = faceNumChange(cur_window,last3window_avg)
+
+        facechange_res.append(change)
+        print ('facenum_when_caputred', facenum_when_captured)
+        print ('facenum_detected', facenum)
+        print (change)
+        print (facechange_res)
+
+        if captureNewFace(facechange_res,facenum,facenum_when_captured):
+
+            facenum_when_captured = facenum
+            #print ('facenum_when_caputred', facenum_when_captured)
+            print ('capture faces')
+            for (x,y,w,h) in faces:
+                numFaces += 1
+                cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces)
+
+                if (os.stat(saveFName).st_size) > 0:
+                    i_w,i_h = Image.open(saveFName).size
+                    if 1.2 >i_w/i_h > 0.8:
+                        sex = estSex(saveFName)
+                        labelFaces(x,y,w,h)
+                else:
+                    os.remove(saveFName)
+
+    process_this_frame = not process_this_frame
+
+
+
+
+    #
+    # for (x,y,w,h) in faces:
+    #     numFaces += 1
+    #     cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces)
+    #
+    #     if (os.stat(saveFName).st_size) > 0:
+    #         i_w,i_h = Image.open(saveFName).size
+    #         if 1.2 >i_w/i_h > 0.8:
+    #             sex = estSex(saveFName)
+    #             labelFaces(x,y,w,h)
+    #     else:
+    #         os.remove(saveFName)
+
+    # show image with rectangular
+    cv2.putText(img, str(facenum) + ' '+ change, (100, 100), font, 1.0, (255, 0, 0), 1)
     cv2.imshow('Video',img)
 
 
