@@ -7,6 +7,8 @@ import datetime
 import time
 from predict_gender import *
 
+start = time.time()
+
 strings = time.strftime("%Y,%m,%d,%H,%M,%S")
 newpath = strings.replace(',','') + '/'
 os.makedirs(newpath)
@@ -118,51 +120,54 @@ while True:
         face_encodings = face_recognition.face_encodings(small_frame, face_locations)
         face_num_his.append(len(face_locations))
 
-        face_changed = detect_face_change(face_num_his,len(face_locations))
+        #face_changed = detect_face_change(face_num_his,len(face_locations))
 
-        if face_changed:
-            text += 'face num chagned, doing face match'
-            print ('doing match face')
-            face_names = []
-            for i in range(len(face_locations)):
+        #if face_changed:
+        text += 'face num chagned, doing face match'
+        print ('doing match face')
+        face_names = []
+        for i in range(len(face_locations)):
 
-                face_encoding = face_encodings[i]
-                face_location = face_locations[i]
+            face_encoding = face_encodings[i]
+            face_location = face_locations[i]
 
-                # See if the face is a match for the known face(s)
-                match = face_recognition.compare_faces(known_faces, face_encoding)
-                print (match)
+            # See if the face is a match for the known face(s)
+            match = face_recognition.compare_faces(known_faces, face_encoding)
+            print (match)
 
-                if len(np.where(match)[0]) > 0:
-                    name = know_faces_names[np.where(match)[0][0]]
-                    gender = face_genders[np.where(match)[0][0]]
+            if len(np.where(match)[0]) > 0:
+                name = know_faces_names[np.where(match)[0][0]]
+                gender = face_genders[np.where(match)[0][0]]
+            else:
+                unknown_face_num += 1
+                name = 'Face'+ str(unknown_face_num)
+                text += 'adding new face'
+                print ('adding new face')
+                known_faces.append(face_encoding)
+                know_faces_names.append(name)
+
+                cropFace,saveFName = saveFaceImg(face_location,name)
+
+                if (os.stat(saveFName).st_size) > 0:
+                    i_w,i_h = Image.open(saveFName).size
+                    if 2.2 >i_w/i_h > 0.4:
+                        print ('estiamte gender')
+                        gender = estSex(saveFName)
+                        print (gender)
+                        face_genders.append(gender)
+
+
+
                 else:
-                    unknown_face_num += 1
-                    name = 'Face'+ str(unknown_face_num)
-                    text += 'adding new face'
-                    print ('adding new face')
-                    known_faces.append(face_encoding)
-                    know_faces_names.append(name)
-
-                    cropFace,saveFName = saveFaceImg(face_location,name)
-
-                    if (os.stat(saveFName).st_size) > 0:
-                        i_w,i_h = Image.open(saveFName).size
-                        if 2.2 >i_w/i_h > 0.4:
-                            print ('estiamte gender')
-                            gender = estSex(saveFName)
-                            print (gender)
-                            face_genders.append(gender)
+                     os.remove(saveFName)
+                     print ('removed face img',saveFName)
+                     unknown_face_num -= 1
+                     known_faces.pop()
+                     know_faces_names.pop()
 
 
-
-                        else:
-                             os.remove(saveFName)
-                             print ('removed face img',saveFName)
-                             unknown_face_num -= 1
-
-
-                face_names.append(name)
+            face_names.append(name)
+            print (time.time() - start)
 
     process_this_frame = not process_this_frame
 
@@ -182,7 +187,7 @@ while True:
         cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
         cv2.putText(frame, name+gender, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-        cv2.putText(frame, text, (100, 100), font, 1.0, (255, 0, 0), 1)
+        cv2.putText(frame, text+str(len(face_locations)), (100, 100), font, 1.0, (255, 0, 0), 1)
 
 
     # Display the resulting image

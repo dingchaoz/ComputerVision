@@ -26,8 +26,6 @@ os.makedirs(newpath)
 video_capture = cv2.VideoCapture(0)
 
 # Load a sample picture and learn how to recognize it.
-# obama_image = face_recognition.load_image_file("obama1.jpg")
-# obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 dingchao_image = face_recognition.load_image_file("obama1.jpg")
 dingchao_face_encoding = face_recognition.face_encodings(dingchao_image)[0]
 candy_image = face_recognition.load_image_file("biden1.jpg")
@@ -117,7 +115,7 @@ while True:
 
     # Resize frame of video to 1/4 size for faster face recognition processing
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-
+    #small_frame = frame
     text = ''
 
     # Only process every other frame of video to save time
