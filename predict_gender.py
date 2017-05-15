@@ -1,4 +1,3 @@
-import os
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -12,7 +11,7 @@ from keras.models import load_model
 from keras.utils.np_utils import probas_to_classes
 import collections
 
-#os.chdir('/Users/ejlq/Documents/dingchao/ComputerVision')
+
 modelPath = 'weights-improvement-05-0.91.hdf5'
 
 def openImg(file = 'cropps/roi2017-05-04 12:18:48.695093.png'):

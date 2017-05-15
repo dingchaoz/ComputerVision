@@ -50,13 +50,27 @@ def encodeFace(saveFNAME):
 
 model = loadVGG()
 
-while(True):
+
+def readScreen():
     screen = ImageGrab.grab(bbox=(0,0,1500,1500)) #bbox specifies specific region (bbox= x,y,width,height)
     #screen = pyscreenshot.grab(bbox=(0,0,1200,900))
     screen_np = np.array(screen)
     gray = cv2.cvtColor(screen_np, cv2.COLOR_BGR2GRAY)
 
     img = cv2.cvtColor(screen_np, cv2.COLOR_RGBA2RGB)
+
+    return screen,gray,img
+
+while(True):
+    # screen = ImageGrab.grab(bbox=(0,0,1500,1500)) #bbox specifies specific region (bbox= x,y,width,height)
+    # #screen = pyscreenshot.grab(bbox=(0,0,1200,900))
+    # screen_np = np.array(screen)
+    # gray = cv2.cvtColor(screen_np, cv2.COLOR_BGR2GRAY)
+    #
+    # img = cv2.cvtColor(screen_np, cv2.COLOR_RGBA2RGB)
+
+    screen,gray,img = readScreen()
+
     # r,g,b,a = screen.split()
     # img= np.array(Image.merge("RGB", (r, g, b)))
     #img = gray
