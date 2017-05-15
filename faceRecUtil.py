@@ -22,11 +22,11 @@ face_locations = []
 face_encodings = []
 face_names = []
 known_face_genders = ['male','male']
-#current_face_genders = []
+current_face_genders = []
 face_landmarks = []
 process_this_frame = True
 unknown_face_num = 0
-face_num_his = collections.deque(maxlen=5)
+last_face_num = 0
 
 # Print the location of each facial feature in this image
 facial_features = [

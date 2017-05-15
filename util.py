@@ -1,19 +1,25 @@
 import itertools
 from predict_gender import *
 
-def detect_face_change(face_num_his,current_face_num):
-    if len(face_num_his) < 5 and face_num_his[-1] > 0:
-        print ("Face detected")
+# def detect_face_change(face_num_his,current_face_num):
+#     if len(face_num_his) < 5 and face_num_his[-1] > 0:
+#         print ("Face detected")
+#         return True
+#     elif current_face_num != face_num_his[-1]:
+#         return False
+#     elif collections.deque(itertools.islice(face_num_his, 1, 4)) != collections.deque(itertools.islice(face_num_his, 0, 3)):
+#         last9num = collections.deque(itertools.islice(face_num_his, 1, 4))
+#         if collections.deque(itertools.islice(last9num, 1, 4)) == collections.deque(itertools.islice(last9num, 0, 3)):
+#             print ("Face detected")
+#             return True
+#         else:
+#             return False
+
+def detect_face_change(face_num,last_face_num):
+    if face_num != last_face_num:
         return True
-    elif current_face_num != face_num_his[-1]:
+    else:
         return False
-    elif collections.deque(itertools.islice(face_num_his, 1, 4)) != collections.deque(itertools.islice(face_num_his, 0, 3)):
-        last9num = collections.deque(itertools.islice(face_num_his, 1, 4))
-        if collections.deque(itertools.islice(last9num, 1, 4)) == collections.deque(itertools.islice(last9num, 0, 3)):
-            print ("Face detected")
-            return True
-        else:
-            return False
 
 
 def saveFaceImg(face_locations,face_name,frame,newpath):

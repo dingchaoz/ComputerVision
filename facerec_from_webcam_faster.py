@@ -40,66 +40,68 @@ while True:
         # Find all the faces and face encodings in the current frame of video
         face_locations = face_recognition.face_locations(small_frame)
         face_encodings = face_recognition.face_encodings(small_frame, face_locations)
-        face_num_his.append(len(face_locations))
-
-        #face_changed = detect_face_change(face_num_his,len(face_locations))
-
-        #if face_changed:
-        text += 'face num chagned, doing face match'
-        #print ('doing match face')
-        face_names = []
-        current_face_genders = []
-        for i in range(len(face_locations)):
-
-            face_encoding = face_encodings[i]
-            face_location = face_locations[i]
-
-            # See if the face is a match for the known face(s)
-            match = face_recognition.compare_faces(known_faces, face_encoding,tolerance = 0.6)
-            print (match)
-
-            if len(np.where(match)[0]) > 0:
-                name = know_faces_names[np.where(match)[0][0]]
-                gender = known_face_genders[np.where(match)[0][0]]
-                current_face_genders.append(gender)
-            else:
-                unknown_face_num += 1
-                name = 'Face'+ str(unknown_face_num)
-                text += 'adding new face'
-                print ('adding new face')
-                known_faces.append(face_encoding)
-                know_faces_names.append(name)
 
 
-                cropFace,saveFName = saveFaceImg(face_location,name,frame,newpath)
+        face_changed = detect_face_change(len(face_locations),last_face_num)
 
-                if (os.stat(saveFName).st_size) > 0:
-                    i_w,i_h = Image.open(saveFName).size
-                    if 2.2 >i_w/i_h > 0.4:
-                        print ('estiamte gender')
-                        gender = estSex(saveFName,model)
-                        print (gender)
-                        known_face_genders.append(gender)
-                        current_face_genders.append(gender)
+        if face_changed:
+            text += 'face num chagned, doing face match'
+            #print ('doing match face')
+            face_names = []
+            current_face_genders = []
+            for i in range(len(face_locations)):
 
+                face_encoding = face_encodings[i]
+                face_location = face_locations[i]
+
+                # See if the face is a match for the known face(s)
+                match = face_recognition.compare_faces(known_faces, face_encoding,tolerance = 0.6)
+                print (match)
+
+                if len(np.where(match)[0]) > 0:
+                    name = know_faces_names[np.where(match)[0][0]]
+                    gender = known_face_genders[np.where(match)[0][0]]
+                    current_face_genders.append(gender)
+                else:
+                    unknown_face_num += 1
+                    name = 'Face'+ str(unknown_face_num)
+                    text += 'adding new face'
+                    print ('adding new face')
+                    known_faces.append(face_encoding)
+                    know_faces_names.append(name)
+
+
+                    cropFace,saveFName = saveFaceImg(face_location,name,frame,newpath)
+
+                    if (os.stat(saveFName).st_size) > 0:
+                        i_w,i_h = Image.open(saveFName).size
+                        if 2.2 >i_w/i_h > 0.4:
+                            print ('estiamte gender')
+                            gender = estSex(saveFName,model)
+                            print (gender)
+                            known_face_genders.append(gender)
+                            current_face_genders.append(gender)
+
+
+                        else:
+                            os.remove(saveFName)
+                            print ('removed face img',saveFName)
+                            unknown_face_num -= 1
+                            known_faces.pop()
+                            know_faces_names.pop()
 
                     else:
-                        os.remove(saveFName)
-                        print ('removed face img',saveFName)
-                        unknown_face_num -= 1
-                        known_faces.pop()
-                        know_faces_names.pop()
-
-                else:
-                     os.remove(saveFName)
-                     print ('removed face img',saveFName)
-                     unknown_face_num -= 1
-                     known_faces.pop()
-                     know_faces_names.pop()
+                         os.remove(saveFName)
+                         print ('removed face img',saveFName)
+                         unknown_face_num -= 1
+                         known_faces.pop()
+                         know_faces_names.pop()
 
 
-            face_names.append(name)
-            print (time.time() - start)
+                face_names.append(name)
+                print (time.time() - start)
+
+    last_face_num = len(face_locations)
 
     process_this_frame = not process_this_frame
 
