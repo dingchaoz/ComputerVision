@@ -1,6 +1,6 @@
 import time
 from util import *
-from faceRecUtil import *
+
 
 start = time.time()
 
@@ -44,8 +44,8 @@ while True:
         face_encodings = face_recognition.face_encodings(small_frame, face_locations)
 
 
-        face_changed = detect_face_change(len(face_locations),last_face_num)
-
+        #face_changed = detect_face_change(len(face_locations),last_face_num)
+        face_changed = True
         if face_changed:
             text += 'face num chagned, doing face match'
             #print ('doing match face')
@@ -65,26 +65,21 @@ while True:
                 if len(index_match) > 0:
 
                     name,current_face_genders = faceMatched(index_match,know_faces_names,known_face_genders,current_face_genders)
+
+                    imgDir = newpath+str(name)+'/'
+
+                    cropFace,saveFName = saveExistingFaceImg(face_location,imgDir,frame,name,newpath)
+
+                    if saveFName != None:
+                        current_face_genders,known_face_genders,known_face_genders_mtli = estReadExistImg(saveFName,model,known_face_genders,current_face_genders,name,known_face_genders_mtli)
+
                 else:
 
                     name,unknown_face_num,known_faces,know_faces_names = noFaceMatched(text,unknown_face_num,known_faces,know_faces_names,face_encoding)
 
                     cropFace,saveFName = saveFaceImg(face_location,name,frame,newpath)
 
-                    if (os.stat(saveFName).st_size) > 0:
-
-                        i_w,i_h = Image.open(saveFName).size
-
-                        if 2.2 >i_w/i_h > 0.4:
-
-                            current_face_genders,known_face_genders = GoodFaceSaved(saveFName,model,known_face_genders,current_face_genders)
-                        else:
-
-                           unknown_face_num,know_faces_names,known_faces=  noGoodFaceSaved(saveFName,unknown_face_num,known_faces,know_faces_names)
-                    else:
-
-                         unknown_face_num,know_faces_names,known_faces= noGoodFaceSaved(saveFName,unknown_face_num,known_faces,know_faces_names)
-
+                    current_face_genders,known_face_genders,unknown_face_num,know_faces_names,known_faces = estReadNewImg(saveFName,model,known_face_genders,current_face_genders,unknown_face_num,known_faces,know_faces_names)
 
                 face_names.append(name)
                 print (time.time() - start)
