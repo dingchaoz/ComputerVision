@@ -27,6 +27,7 @@ face_landmarks = []
 process_this_frame = True
 unknown_face_num = 0
 last_face_num = 0
+get_moreface = True
 
 # Print the location of each facial feature in this image
 facial_features = [

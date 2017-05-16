@@ -30,7 +30,10 @@ def saveFaceImg(face_locations,face_name,frame,newpath):
     bottom *= 4
     left *= 4
     imgDir = newpath+str(face_name)+'/'
-    os.mkdir(imgDir)
+
+    if not os.path.exists(imgDir):
+        print (os.path.exists(imgDir))
+        os.mkdir(imgDir)
 
     margin = int(max(abs(top-bottom),abs(right-left))/2)
     cropFace = frame[top-margin:bottom+margin,left-margin:right+margin]
@@ -40,11 +43,18 @@ def saveFaceImg(face_locations,face_name,frame,newpath):
     return cropFace,saveFName
 
 
-def saveExistingFaceImg(face_locations,imgDir,frame,name,newpath):
+def saveExistingFaceImg(face_locations,imgDir,frame,name,newpath,get_moreface):
 
     imgDir = newpath+str(name)+'/'
 
-    countImgs = len(os.listdir(imgDir))
+    if os.path.exists(imgDir):
+
+        countImgs = len(os.listdir(imgDir))
+
+    else:
+        return None,None,get_moreface
+
+
 
     if countImgs < 5:
 
@@ -66,14 +76,16 @@ def saveExistingFaceImg(face_locations,imgDir,frame,name,newpath):
 
             if 2.2 >i_w/i_h > 0.4:
 
-                return cropFace,saveFName
+                return cropFace,saveFName,get_moreface
 
         else:
 
             os.remove(saveFName)
+            return None,None,get_moreface
 
     else:
-        return None,None
+        get_moreface = False
+        return None,None,get_moreface
 
 
 def estSex(saveFName,model):
@@ -113,7 +125,7 @@ def faceMatched(index_match,know_faces_names,known_face_genders,current_face_gen
 
     return name,current_face_genders
 
-def noFaceMatched(text,unknown_face_num,known_faces,know_faces_names,face_encoding):
+def noFaceMatched(text,unknown_face_num,known_faces,know_faces_names,face_encoding,get_moreface):
 
     print (unknown_face_num)
     unknown_face_num += 1
@@ -123,8 +135,9 @@ def noFaceMatched(text,unknown_face_num,known_faces,know_faces_names,face_encodi
     print (unknown_face_num)
     known_faces.append(face_encoding)
     know_faces_names.append(name)
+    get_moreface = True
 
-    return name,unknown_face_num,known_faces,know_faces_names
+    return name,unknown_face_num,known_faces,know_faces_names,get_moreface
 
 def noGoodFaceSaved(saveFName,unknown_face_num,known_faces,know_faces_names):
     os.remove(saveFName)

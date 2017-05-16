@@ -44,9 +44,9 @@ while True:
         face_encodings = face_recognition.face_encodings(small_frame, face_locations)
 
 
-        #face_changed = detect_face_change(len(face_locations),last_face_num)
-        face_changed = True
-        if face_changed:
+        face_changed = detect_face_change(len(face_locations),last_face_num)
+        #face_changed = True
+        if face_changed or get_moreface:
             text += 'face num chagned, doing face match'
             #print ('doing match face')
             face_names = []
@@ -68,14 +68,14 @@ while True:
 
                     imgDir = newpath+str(name)+'/'
 
-                    cropFace,saveFName = saveExistingFaceImg(face_location,imgDir,frame,name,newpath)
+                    cropFace,saveFName,get_moreface = saveExistingFaceImg(face_location,imgDir,frame,name,newpath,get_moreface)
 
                     if saveFName != None:
                         current_face_genders,known_face_genders,known_face_genders_mtli = estReadExistImg(saveFName,model,known_face_genders,current_face_genders,name,known_face_genders_mtli)
 
                 else:
 
-                    name,unknown_face_num,known_faces,know_faces_names = noFaceMatched(text,unknown_face_num,known_faces,know_faces_names,face_encoding)
+                    name,unknown_face_num,known_faces,know_faces_names,get_moreface = noFaceMatched(text,unknown_face_num,known_faces,know_faces_names,face_encoding,get_moreface)
 
                     cropFace,saveFName = saveFaceImg(face_location,name,frame,newpath)
 
