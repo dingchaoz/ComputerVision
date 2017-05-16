@@ -66,3 +66,47 @@ def displayRes(face_locations, face_names,face_genders,frame,text):
 
     # Display the resulting image
     cv2.imshow('Video', frame)
+
+def faceMatched(index_match,know_faces_names,known_face_genders,current_face_genders):
+    name = know_faces_names[index_match[0]]
+    gender = known_face_genders[index_match[0]]
+    current_face_genders.append(gender)
+
+    return name,current_face_genders
+
+def noFaceMatched(text,unknown_face_num,known_faces,know_faces_names,face_encoding):
+
+    print (unknown_face_num)
+    unknown_face_num += 1
+
+    name = 'Face'+ str(unknown_face_num)
+    print ('adding new face')
+    print (unknown_face_num)
+    known_faces.append(face_encoding)
+    know_faces_names.append(name)
+
+    return name,unknown_face_num,known_faces,know_faces_names
+
+def noGoodFaceSaved(saveFName,unknown_face_num,known_faces,know_faces_names):
+    os.remove(saveFName)
+    print ('removed face img',saveFName)
+    unknown_face_num -= 1
+    known_faces.pop()
+    know_faces_names.pop()
+
+    return unknown_face_num,know_faces_names,known_faces
+
+def GoodFaceSaved(saveFName,model,known_face_genders,current_face_genders):
+
+
+    print ('estiamte gender')
+    gender = estSex(saveFName,model)
+    print (gender)
+    known_face_genders.append(gender)
+    current_face_genders.append(gender)
+
+    return current_face_genders,known_face_genders
+
+
+
+

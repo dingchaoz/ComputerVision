@@ -26,6 +26,8 @@ model = loadVGG()
 
 
 while True:
+
+    #print (unknown_face_num)
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
@@ -58,44 +60,30 @@ while True:
                 match = face_recognition.compare_faces(known_faces, face_encoding,tolerance = 0.6)
                 print (match)
 
-                if len(np.where(match)[0]) > 0:
-                    name = know_faces_names[np.where(match)[0][0]]
-                    gender = known_face_genders[np.where(match)[0][0]]
-                    current_face_genders.append(gender)
-                else:
-                    unknown_face_num += 1
-                    name = 'Face'+ str(unknown_face_num)
-                    text += 'adding new face'
-                    print ('adding new face')
-                    known_faces.append(face_encoding)
-                    know_faces_names.append(name)
+                index_match = np.where(match)[0]
 
+                if len(index_match) > 0:
+
+                    name,current_face_genders = faceMatched(index_match,know_faces_names,known_face_genders,current_face_genders)
+                else:
+
+                    name,unknown_face_num,known_faces,know_faces_names = noFaceMatched(text,unknown_face_num,known_faces,know_faces_names,face_encoding)
 
                     cropFace,saveFName = saveFaceImg(face_location,name,frame,newpath)
 
                     if (os.stat(saveFName).st_size) > 0:
+
                         i_w,i_h = Image.open(saveFName).size
+
                         if 2.2 >i_w/i_h > 0.4:
-                            print ('estiamte gender')
-                            gender = estSex(saveFName,model)
-                            print (gender)
-                            known_face_genders.append(gender)
-                            current_face_genders.append(gender)
 
-
+                            current_face_genders,known_face_genders = GoodFaceSaved(saveFName,model,known_face_genders,current_face_genders)
                         else:
-                            os.remove(saveFName)
-                            print ('removed face img',saveFName)
-                            unknown_face_num -= 1
-                            known_faces.pop()
-                            know_faces_names.pop()
 
+                           unknown_face_num,know_faces_names,known_faces=  noGoodFaceSaved(saveFName,unknown_face_num,known_faces,know_faces_names)
                     else:
-                         os.remove(saveFName)
-                         print ('removed face img',saveFName)
-                         unknown_face_num -= 1
-                         known_faces.pop()
-                         know_faces_names.pop()
+
+                         unknown_face_num,know_faces_names,known_faces= noGoodFaceSaved(saveFName,unknown_face_num,known_faces,know_faces_names)
 
 
                 face_names.append(name)
