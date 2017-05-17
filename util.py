@@ -105,11 +105,19 @@ def displayRes(face_locations, face_names,face_genders,frame,text):
         bottom *= 4
         left *= 4
 
+        if gender == 'male':
+
+            box_color = (200,244,66)
+        elif gender == 'female':
+            box_color = (179,66,244)
+        else:
+            box_color = (66,226,244)
+
         # Draw a box around the face
-        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        cv2.rectangle(frame, (left, top), (right, bottom), box_color, 2)
 
         # Draw a label with a name below the face
-        cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+        cv2.rectangle(frame, (left, bottom - 35), (right, bottom), box_color, cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
         cv2.putText(frame, name+' ' +gender, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
         cv2.putText(frame, text+str(len(face_locations)), (100, 100), font, 1.0, (255, 0, 0), 1)
