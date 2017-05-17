@@ -4,7 +4,7 @@ import face_recognition
 
 # Load a sample picture and learn how to recognize it.
 
-kface1_image = face_recognition.load_image_file("Mike.png")
+kface1_image = face_recognition.load_image_file("stiles.jpg")
 kface1_face_encoding = face_recognition.face_encodings(kface1_image)[0]
 kface2_image = face_recognition.load_image_file("biden1.jpg")
 kface2_face_encoding = face_recognition.face_encodings(kface2_image)[0]

@@ -47,7 +47,7 @@ while True:
         face_changed = detect_face_change(len(face_locations),last_face_num)
         #face_changed = True
         if face_changed or get_moreface:
-            text += 'face num chagned, doing face match'
+
             #print ('doing match face')
             face_names = []
             current_face_genders = []

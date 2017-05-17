@@ -76,7 +76,7 @@ def saveExistingFaceImg(face_locations,imgDir,frame,name,newpath,get_moreface):
 
             if 2.2 >i_w/i_h > 0.4:
 
-                return cropFace,saveFName,get_moreface
+                return cropFace,saveFName,True
 
         else:
 
