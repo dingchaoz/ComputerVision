@@ -105,7 +105,7 @@ def displayRes(face_locations, face_names,face_genders,frame,text):
         bottom *= 4
         left *= 4
 
-        print (face_locations,face_names)
+        #print (face_locations,face_names)
 
         if gender == 'male':
 

@@ -68,7 +68,7 @@ while True:
                 else:
                     index_match = indices_match
 
-                print (index_match)
+                #print (index_match)
 
                 if len(index_match) > 0:
 
@@ -91,7 +91,7 @@ while True:
 
                 face_names.append(name)
                 screen_face_locations.append(face_location)
-                print(face_location,name)
+                #print(face_location,name)
                 #print (time.time() - start)
 
     last_face_num = len(face_locations)
