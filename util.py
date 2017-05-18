@@ -52,7 +52,7 @@ def saveExistingFaceImg(face_locations,imgDir,frame,name,newpath,get_moreface):
         countImgs = len(os.listdir(imgDir))
 
     else:
-        return None,None,get_moreface
+        return None,None,False
 
 
 
