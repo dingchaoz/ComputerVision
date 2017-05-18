@@ -45,6 +45,7 @@ def estSex(saveFName,model):
 def labelFaces(x,y,w,h,img,sex,font):
 	cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
 	imgLabel = sex
+	print (sex)
 	cv2.putText(img,imgLabel,(x, y), font, 1,(0,255,0),1,cv2.LINE_AA)
 
 
@@ -61,29 +62,6 @@ def main(argv):
 	model = loadVGG()
 	img,gray = read2Gray(str(argv[0]))
 	faces = detectFaces(face_cascade,gray)
-
-
-
-    '''
-    Drawing facial landmark
-    Save 10 pics initially
-    Analyze facial measurements and give it a index number
-    Predict gender and assign a label
-
-
-    If face number changes up or down for more than 5 secs
-    Compare if detected faces are existing faces,
-    if yes:
-            just give the pre-estiamted label
-    if not:
-            draw facial landmark, save 10 pics,
-            analyze measurement, predict gender and assign a label
-
-
-    '''
-
-
-
 
 	for (x,y,w,h) in faces:
 		numFaces += 1
