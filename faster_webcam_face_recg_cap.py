@@ -43,6 +43,7 @@ while True:
         face_locations = face_recognition.face_locations(small_frame)
         face_encodings = face_recognition.face_encodings(small_frame, face_locations)
 
+        #print (face_locations,face_encodings)
 
         face_changed = detect_face_change(len(face_locations),last_face_num)
         #face_changed = True
@@ -51,6 +52,7 @@ while True:
             #print ('doing match face')
             face_names = []
             current_face_genders = []
+            screen_face_locations = []
             for i in range(len(face_locations)):
 
                 face_encoding = face_encodings[i]
@@ -88,6 +90,8 @@ while True:
                     current_face_genders,known_face_genders,unknown_face_num,know_faces_names,known_faces = estReadNewImg(saveFName,model,known_face_genders,current_face_genders,unknown_face_num,known_faces,know_faces_names)
 
                 face_names.append(name)
+                screen_face_locations.append(face_location)
+                print(face_location,name)
                 #print (time.time() - start)
 
     last_face_num = len(face_locations)
@@ -95,7 +99,7 @@ while True:
     process_this_frame = not process_this_frame
 
     # Display result and label faces
-    displayRes(face_locations, face_names,current_face_genders,frame,text)
+    displayRes(screen_face_locations, face_names,current_face_genders,frame,text)
 
     # Hit 'q' on the keyboard to quit!
     if cv2.waitKey(1) & 0xFF == ord('q'):

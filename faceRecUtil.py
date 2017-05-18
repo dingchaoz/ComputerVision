@@ -29,6 +29,7 @@ face_names = []
 known_face_genders = ['?','male','male','male']
 known_face_genders_mtli = [[],[],[],[]]
 current_face_genders = []
+screen_face_locations = []
 face_landmarks = []
 process_this_frame = True
 unknown_face_num = 0
