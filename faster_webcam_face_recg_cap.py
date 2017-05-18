@@ -43,14 +43,14 @@ while True:
         face_locations = face_recognition.face_locations(small_frame)
         face_encodings = face_recognition.face_encodings(small_frame, face_locations)
         screen_face_locations = []
-        for face_loc in face_locations:
-            screen_face_locations.append(face_loc)
+        #for face_loc in face_locations:
+            #screen_face_locations.append(face_loc)
 
 
         #print (face_locations,face_encodings)
 
-        face_changed = detect_face_change(len(face_locations),last_face_num)
-        #face_changed = True
+        #face_changed = detect_face_change(len(face_locations),last_face_num)
+        face_changed = True
         if face_changed or get_moreface:
 
             #print ('doing match face')
