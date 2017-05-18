@@ -58,9 +58,15 @@ while True:
 
                 # See if the face is a match for the known face(s)
                 match = face_recognition.compare_faces(known_faces, face_encoding,tolerance = 0.6)
-                print (match)
 
-                index_match = np.where(match)[0]
+                indices_match = np.where(match)[0]
+
+                if len([x for x in indices_match if x <=3]) > 1:
+                    index_match = [np.argmin(face_recognition.face_distance(known_faces, face_encoding)[:3])]
+                else:
+                    index_match = indices_match
+
+                print (index_match)
 
                 if len(index_match) > 0:
 
@@ -82,7 +88,7 @@ while True:
                     current_face_genders,known_face_genders,unknown_face_num,know_faces_names,known_faces = estReadNewImg(saveFName,model,known_face_genders,current_face_genders,unknown_face_num,known_faces,know_faces_names)
 
                 face_names.append(name)
-                print (time.time() - start)
+                #print (time.time() - start)
 
     last_face_num = len(face_locations)
 
