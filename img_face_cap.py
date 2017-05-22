@@ -64,7 +64,6 @@ def main(argv):
 	img,gray = read2Gray(str(argv[0]))
 	faces = detectFaces(face_cascade,gray)
 
-	print ('face detected',faces)
 
 	for (x,y,w,h) in faces:
 		numFaces += 1
