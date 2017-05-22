@@ -11,11 +11,12 @@
 // Put variables in global scope to make them available to the browser console.
 var video = document.querySelector('video');
 var canvas = window.canvas = document.querySelector('canvas');
+var img = new Image();
 canvas.width = 480;
 canvas.height = 360;
 
-var button = document.querySelector('button');
-button.onclick = function() {
+var snapshot_button = document.getElementById('snapshot');
+snapshot_button.onclick = function() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   canvas.getContext('2d').
@@ -30,6 +31,18 @@ button.onclick = function() {
     }).done(function() {
       console.log('sent');
     });
+};
+
+var pretty_button = document.getElementById('makepretty');
+pretty_button.onclick = function() {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  console.log('make pretty')
+  img.src = 'static/img/pretty.png';
+  canvas.getContext('2d').
+    drawImage(img, 0, 0, canvas.width, canvas.height);
+  console.log('finished makeup')
+
 };
 
 var constraints = {
