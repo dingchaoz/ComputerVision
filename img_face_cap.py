@@ -32,6 +32,7 @@ def saveFaceImg(x,y,w,h,numFaces,img,newpath):
 	cropFace = img[y-margin:y+h+margin,x-margin:x+w+margin]
 	saveFName = newpath+'roi'+str(numFaces)+'.png'
 	cv2.imwrite(saveFName,cropFace)
+	#open(saveFName)
 	print ('saved face img',numFaces)
 	return cropFace,saveFName
 
@@ -63,6 +64,8 @@ def main(argv):
 	img,gray = read2Gray(str(argv[0]))
 	faces = detectFaces(face_cascade,gray)
 
+	print ('face detected',faces)
+
 	for (x,y,w,h) in faces:
 		numFaces += 1
 		cropFace,saveFName = saveFaceImg(x,y,w,h,numFaces,img,newpath)
@@ -71,8 +74,12 @@ def main(argv):
 			if 1.2 >i_w/i_h > 0.8:
 				sex = estSex(saveFName,model)
 				labelFaces(x,y,w,h,img,sex,font)
-		else:
-			os.remove(saveFName)
+		# 	else:
+		# 		os.remove(saveFName)
+		# 		print ('removed case1',saveFName)
+		# else:
+		# 	os.remove(saveFName)
+		# 	print ('removed case2',saveFName)
 		
 
 	# show image with rectangular             
