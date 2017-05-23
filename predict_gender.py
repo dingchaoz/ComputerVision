@@ -13,6 +13,7 @@ import collections
 
 
 modelPath = 'weights-improvement-05-0.91.hdf5'
+modelAgePath = 'weights-improvement-08-8.15.hdf5'
 
 def openImg(file = 'cropps/roi2017-05-04 12:18:48.695093.png'):
     img = Image.open(file)    
@@ -57,6 +58,11 @@ def loadVGG(model = modelPath):
 	print ('load model',modelPath)
 	model = load_model(model)
 	return model
+
+def loadVGGAge(agemodel = modelAgePath):
+	print ('load age model',modelAgePath)
+	agemodel = load_model(agemodel)
+	return agemodel
 	
 
 def predict_vgg(model,x_test):
@@ -70,4 +76,8 @@ def predict_vgg(model,x_test):
     	gender = 'female'
     return gender
 
+def predict_age_vgg(agemodel,x_test):
+    age = agemodel.predict(x=np.array(x_test))
+
+    return age
 
