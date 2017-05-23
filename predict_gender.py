@@ -15,6 +15,8 @@ import collections
 modelPath = 'weights-improvement-05-0.91.hdf5'
 modelAgePath = 'weights-improvement-08-8.15.hdf5'
 
+
+
 def openImg(file = 'cropps/roi2017-05-04 12:18:48.695093.png'):
     img = Image.open(file)    
     return img

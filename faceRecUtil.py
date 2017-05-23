@@ -29,6 +29,9 @@ face_names = []
 known_face_genders = ['?','male','male','male']
 known_face_genders_mtli = [[],[],[],[]]
 current_face_genders = []
+known_face_ages = [0,70,40,38]
+known_face_ages_mtli = [[],[],[],[]]
+current_face_ages = []
 screen_face_locations = []
 face_landmarks = []
 process_this_frame = True
@@ -48,3 +51,5 @@ facial_features = [
     'top_lip',
     'bottom_lip'
 ]
+
+print (known_face_genders[0])

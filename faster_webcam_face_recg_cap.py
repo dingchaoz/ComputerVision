@@ -21,8 +21,7 @@ os.makedirs(newpath)
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 
-# Load model
-model = loadVGG()
+
 
 
 while True:
@@ -56,6 +55,7 @@ while True:
             #print ('doing match face')
             face_names = []
             current_face_genders = []
+            current_face_ages = []
             screen_face_locations = []
             for i in range(len(face_locations)):
 
@@ -76,14 +76,14 @@ while True:
 
                 if len(index_match) > 0:
 
-                    name,current_face_genders = faceMatched(index_match,know_faces_names,known_face_genders,current_face_genders)
+                    name,current_face_genders,current_face_ages = faceMatched(index_match,know_faces_names,known_face_genders,current_face_genders,known_face_ages,current_face_ages)
 
                     imgDir = newpath+str(name)+'/'
 
                     cropFace,saveFName,get_moreface = saveExistingFaceImg(face_location,imgDir,frame,name,newpath,get_moreface)
 
                     if saveFName != None:
-                        current_face_genders,known_face_genders,known_face_genders_mtli = estReadExistImg(saveFName,model,known_face_genders,current_face_genders,name,known_face_genders_mtli)
+                        current_face_genders,known_face_genders,known_face_genders_mtli,current_face_ages,known_face_ages,known_face_ages_mtli = estReadExistImg(saveFName,model,known_face_genders,current_face_genders,name,known_face_genders_mtli,known_face_ages,current_face_ages,known_face_ages_mtli)
 
                 else:
 
@@ -91,7 +91,7 @@ while True:
 
                     cropFace,saveFName = saveFaceImg(face_location,name,frame,newpath)
 
-                    current_face_genders,known_face_genders,unknown_face_num,know_faces_names,known_faces = estReadNewImg(saveFName,model,known_face_genders,current_face_genders,unknown_face_num,known_faces,know_faces_names)
+                    current_face_genders,known_face_genders,current_face_ages,known_face_ages,unknown_face_num,know_faces_names,known_faces = estReadNewImg(saveFName,model,known_face_genders,current_face_genders,known_face_genders_mtli,known_face_ages,current_face_ages,known_face_ages_mtli,unknown_face_num,known_faces,know_faces_names)
 
                 face_names.append(name)
                 screen_face_locations.append(face_location)
@@ -103,7 +103,7 @@ while True:
     process_this_frame = not process_this_frame
 
     # Display result and label faces
-    displayRes(screen_face_locations, face_names,current_face_genders,frame,text)
+    displayRes(screen_face_locations, face_names,current_face_genders,current_face_ages,frame,text)
 
     # Hit 'q' on the keyboard to quit!
     if cv2.waitKey(1) & 0xFF == ord('q'):
