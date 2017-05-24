@@ -42,12 +42,22 @@ def estSex(saveFName):
     sex = predict_vgg(model,arr)
     return sex
 
+def estAge(saveFName):
+	# resized_img = resize(cropFace)
+	# arr = im2Array(resized_img)
+	arr = np.array([loadImg2Array(saveFName)])
+	age = predict_age_vgg(agemodel,arr)[0][0]
+	return age
+
+
 def labelFaces(x,y,w,h):
     cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-    imgLabel = sex
+    imgLabel = sex + ' ' + str(age)
+
     cv2.putText(img,imgLabel,(x, y), font, 1,(0,255,0),1,cv2.LINE_AA)
 
 model = loadVGG()
+agemodel = loadVGGAge()
 
 while(True):
     screen = ImageGrab.grab(bbox=(0,0,1500,1500)) #bbox specifies specific region (bbox= x,y,width,height)
@@ -69,6 +79,7 @@ while(True):
             i_w,i_h = Image.open(saveFName).size
             if 1.2 >i_w/i_h > 0.8:
                 sex = estSex(saveFName)
+                age = estAge(saveFName)
                 labelFaces(x,y,w,h)
             else:
                 os.remove(saveFName)
