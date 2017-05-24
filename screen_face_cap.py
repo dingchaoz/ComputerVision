@@ -46,7 +46,7 @@ def estAge(saveFName):
 	# resized_img = resize(cropFace)
 	# arr = im2Array(resized_img)
 	arr = np.array([loadImg2Array(saveFName)])
-	age = predict_age_vgg(agemodel,arr)[0][0]
+	age = int(predict_age_vgg(agemodel,arr)[0][0])
 	return age
 
 
